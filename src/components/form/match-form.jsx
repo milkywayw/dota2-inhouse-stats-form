@@ -79,27 +79,25 @@ const MatchForm = () => {
     <div className="max-w-7xl mx-auto p-4">
       {/* Header Section */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-4 text-[var(--text)]">Match Entry</h1>
+        <h1 className="text-2xl font-bold mb-4">Match Entry</h1>
         <div className="flex gap-4">
           <div>
-            <label className="block text-sm text-[var(--text)]">Date of Inhouse</label>
+            <label className="block text-sm mb-1">Date of Inhouse</label>
             <input
               type="date"
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              className={`px-3 py-2 rounded border text-[var(--text)] bg-[var(--background)] ${
-                errors.date && touched ? 'border-[var(--error)]' : 'border-[var(--border)]'
-              }`}
+              className={`px-3 py-2 rounded border ${errors.date && touched ? 'border-red-500' : 'border-gray-200'}`}
             />
           </div>
           <div className="flex-1">
-            <label className="block text-sm text-[var(--text)]">Notes</label>
+            <label className="block text-sm mb-1">Notes</label>
             <input
               type="text"
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               placeholder="Optional notes about the match"
-              className="w-full px-3 py-2 rounded border border-[var(--border)] text-[var(--text)] bg-[var(--background)]"
+              className="w-full px-3 py-2 rounded border border-gray-200"
             />
           </div>
         </div>
@@ -107,14 +105,12 @@ const MatchForm = () => {
 
       {/* Bans Section */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-[var(--text)]">Bans</h2>
+        <h2 className="text-xl font-semibold mb-4">Bans</h2>
         <div className="space-y-4">
           {['radiant', 'dire'].map((team) => (
             <div key={`${team}-bans`}>
               <h3
-                className={`text-sm font-medium mb-2 ${
-                  team === 'radiant' ? 'text-[var(--radiant)]' : 'text-[var(--dire)]'
-                }`}
+                className={`text-sm font-medium mb-2 ${team === 'radiant' ? 'text-[#92A525]' : 'text-[#C23C2A]'}`}
               >
                 {team.charAt(0).toUpperCase() + team.slice(1)} Bans
               </h3>
@@ -150,20 +146,17 @@ const MatchForm = () => {
                 }
                 className={`p-2 rounded-full transition-colors border-2 ${
                   formData.winner === team
-                    ? 'bg-[var(--trophy)] text-white border-[var(--trophy)]'
+                    ? 'bg-[#DAA520] text-white border-[#DAA520]'
                     : touched && !formData.winner
-                      ? 'border-[var(--error)]'
-                      : 'border-gray-300 hover:border-[var(--trophy)]'
+                      ? 'border-red-500'
+                      : 'border-gray-300 hover:border-[#DAA520]'
                 }`}
               >
                 <Trophy className="w-5 h-5" />
               </button>
             </Tooltip>
-
             <h2
-              className={`text-xl font-semibold ${
-                team === 'radiant' ? 'text-[var(--radiant)]' : 'text-[var(--dire)]'
-              }`}
+              className={`text-xl font-semibold ${team === 'radiant' ? 'text-[#92A525]' : 'text-[#C23C2A]'}`}
             >
               {team.charAt(0).toUpperCase() + team.slice(1)}
             </h2>
@@ -172,7 +165,7 @@ const MatchForm = () => {
           <div className="space-y-3">
             {ROLES.map((role, index) => (
               <div key={`${team}-${role}`} className="flex items-center gap-4">
-                <div className="w-16 text-sm font-medium text-[var(--text)]">{role}</div>
+                <div className="w-16 text-sm font-medium">{role}</div>
                 <div className="w-64">
                   <PlayerSelector
                     selectedPlayer={formData[`${team}Players`][index].player}
@@ -199,6 +192,7 @@ const MatchForm = () => {
                 </div>
                 <div className="flex items-center">
                   <input
+                    key={`${team}-${role}-kills`}
                     type="number"
                     min="0"
                     placeholder="K"
@@ -208,14 +202,15 @@ const MatchForm = () => {
                       newPlayers[index] = { ...newPlayers[index], kills: e.target.value };
                       setFormData({ ...formData, [`${team}Players`]: newPlayers });
                     }}
-                    className={`w-16 px-2 py-1 rounded border text-[var(--text)] bg-[var(--background)] ${
+                    className={`w-16 px-2 py-1 rounded border transition-colors ${
                       touched && !formData[`${team}Players`][index].kills
-                        ? 'border-[var(--error)]'
-                        : 'border-[var(--border)]'
+                        ? 'border-red-500'
+                        : 'border-gray-200'
                     }`}
                   />
-                  <span className="mx-1 text-[var(--text)]">/</span>
+                  <span className="mx-1 text-gray-500">/</span>
                   <input
+                    key={`${team}-${role}-deaths`}
                     type="number"
                     min="0"
                     placeholder="D"
@@ -225,14 +220,15 @@ const MatchForm = () => {
                       newPlayers[index] = { ...newPlayers[index], deaths: e.target.value };
                       setFormData({ ...formData, [`${team}Players`]: newPlayers });
                     }}
-                    className={`w-16 px-2 py-1 rounded border text-[var(--text)] bg-[var(--background)] ${
+                    className={`w-16 px-2 py-1 rounded border transition-colors ${
                       touched && !formData[`${team}Players`][index].deaths
-                        ? 'border-[var(--error)]'
-                        : 'border-[var(--border)]'
+                        ? 'border-red-500'
+                        : 'border-gray-200'
                     }`}
                   />
-                  <span className="mx-1 text-[var(--text)]">/</span>
+                  <span className="mx-1 text-gray-500">/</span>
                   <input
+                    key={`${team}-${role}-assists`}
                     type="number"
                     min="0"
                     placeholder="A"
@@ -242,10 +238,10 @@ const MatchForm = () => {
                       newPlayers[index] = { ...newPlayers[index], assists: e.target.value };
                       setFormData({ ...formData, [`${team}Players`]: newPlayers });
                     }}
-                    className={`w-16 px-2 py-1 rounded border text-[var(--text)] bg-[var(--background)] ${
+                    className={`w-16 px-2 py-1 rounded border transition-colors ${
                       touched && !formData[`${team}Players`][index].assists
-                        ? 'border-[var(--error)]'
-                        : 'border-[var(--border)]'
+                        ? 'border-red-500'
+                        : 'border-gray-200'
                     }`}
                   />
                 </div>
@@ -261,8 +257,8 @@ const MatchForm = () => {
                     }}
                     className={`p-2 rounded-full transition-colors border-2 ${
                       formData[`${team}Captain`] === index
-                        ? 'bg-[var(--trophy)] text-white border-[var(--trophy)]'
-                        : 'border-gray-300 hover:border-[var(--trophy)]'
+                        ? 'bg-[#DAA520] text-white border-[#DAA520]'
+                        : 'border-gray-300 hover:border-[#DAA520]'
                     }`}
                   >
                     <Crown className="w-5 h-5" />
@@ -277,7 +273,7 @@ const MatchForm = () => {
       <button
         type="submit"
         onClick={handleSubmit}
-        className="w-full py-3 rounded bg-[var(--radiant)] hover:bg-[var(--dire)] text-white font-medium transition-colors"
+        className="w-full py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-medium"
       >
         Submit Match
       </button>
