@@ -60,4 +60,4 @@ This is primarily a personal project for our friend group, but feel free to fork
 
 ## License
 
-MITç
+MIT
