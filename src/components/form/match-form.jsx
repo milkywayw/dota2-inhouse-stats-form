@@ -190,26 +190,60 @@ const MatchForm = () => {
                     error={touched && errors[`${team}Hero${index}`]}
                   />
                 </div>
-                <div className="flex gap-2">
-                  {['kills', 'deaths', 'assists'].map((stat) => (
-                    <input
-                      key={`${team}-${role}-${stat}`}
-                      type="number"
-                      min="0"
-                      placeholder={KDA_LABELS[stat]}
-                      value={formData[`${team}Players`][index][stat]}
-                      onChange={(e) => {
-                        const newPlayers = [...formData[`${team}Players`]];
-                        newPlayers[index] = { ...newPlayers[index], [stat]: e.target.value };
-                        setFormData({ ...formData, [`${team}Players`]: newPlayers });
-                      }}
-                      className={`w-16 px-2 py-1 rounded border transition-colors ${
-                        touched && !formData[`${team}Players`][index][stat]
-                          ? 'border-red-500'
-                          : 'border-gray-200'
-                      }`}
-                    />
-                  ))}
+                <div className="flex items-center">
+                  <input
+                    key={`${team}-${role}-kills`}
+                    type="number"
+                    min="0"
+                    placeholder="K"
+                    value={formData[`${team}Players`][index].kills}
+                    onChange={(e) => {
+                      const newPlayers = [...formData[`${team}Players`]];
+                      newPlayers[index] = { ...newPlayers[index], kills: e.target.value };
+                      setFormData({ ...formData, [`${team}Players`]: newPlayers });
+                    }}
+                    className={`w-16 px-2 py-1 rounded border transition-colors ${
+                      touched && !formData[`${team}Players`][index].kills
+                        ? 'border-red-500'
+                        : 'border-gray-200'
+                    }`}
+                  />
+                  <span className="mx-1 text-gray-500">/</span>
+                  <input
+                    key={`${team}-${role}-deaths`}
+                    type="number"
+                    min="0"
+                    placeholder="D"
+                    value={formData[`${team}Players`][index].deaths}
+                    onChange={(e) => {
+                      const newPlayers = [...formData[`${team}Players`]];
+                      newPlayers[index] = { ...newPlayers[index], deaths: e.target.value };
+                      setFormData({ ...formData, [`${team}Players`]: newPlayers });
+                    }}
+                    className={`w-16 px-2 py-1 rounded border transition-colors ${
+                      touched && !formData[`${team}Players`][index].deaths
+                        ? 'border-red-500'
+                        : 'border-gray-200'
+                    }`}
+                  />
+                  <span className="mx-1 text-gray-500">/</span>
+                  <input
+                    key={`${team}-${role}-assists`}
+                    type="number"
+                    min="0"
+                    placeholder="A"
+                    value={formData[`${team}Players`][index].assists}
+                    onChange={(e) => {
+                      const newPlayers = [...formData[`${team}Players`]];
+                      newPlayers[index] = { ...newPlayers[index], assists: e.target.value };
+                      setFormData({ ...formData, [`${team}Players`]: newPlayers });
+                    }}
+                    className={`w-16 px-2 py-1 rounded border transition-colors ${
+                      touched && !formData[`${team}Players`][index].assists
+                        ? 'border-red-500'
+                        : 'border-gray-200'
+                    }`}
+                  />
                 </div>
                 <Tooltip content="Mark this player as the team drafter!">
                   <button
