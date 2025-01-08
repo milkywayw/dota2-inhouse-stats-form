@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Trophy, Crown } from 'lucide-react';
-import HeroSelector from './ui/hero-selector';
-import PlayerSelector from './ui/player-selector';
-import { heroes } from '../data/heroes';
-import { players } from '../data/players';
+import HeroSelector from '../ui/hero-selector';
+import PlayerSelector from '../ui/player-selector';
+import { heroes } from '../../data/heroes';
+import { players } from '../../data/players';
 
 const ROLES = ['Carry', 'Mid', 'Off', 'Soft', 'Hard'];
 
