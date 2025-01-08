@@ -21,30 +21,32 @@ const PlayerSelector = ({
     <Combobox value={selectedPlayer} onChange={onChange} disabled={disabled}>
       <div className="relative">
         <div
-          className={`flex bg-white rounded overflow-hidden border transition-colors ${
-            error ? 'border-red-500' : 'border-gray-200'
+          className={`flex rounded overflow-hidden border transition-colors ${
+            error ? 'border-theme-error' : 'border-theme-border'
           }`}
         >
           <Combobox.Input
-            className="w-full px-2 py-1 text-sm border-none focus:ring-0"
+            className="w-full px-2 py-1 text-sm border-none focus:ring-0 combobox-input text-theme-text placeholder-theme-text-muted"
             onChange={(event) => setQuery(event.target.value)}
             displayValue={(player) => player}
             placeholder={placeholder}
           />
-          <Combobox.Button className="px-2 bg-gray-50 border-l border-gray-200">
-            <ChevronDown className="h-4 w-4 text-gray-400" />
+          <Combobox.Button className="px-2 bg-theme-surface-secondary border-l border-theme-border">
+            <ChevronDown className="h-4 w-4 text-theme-text-muted" />
           </Combobox.Button>
         </div>
-        <Combobox.Options className="absolute z-10 w-full mt-1 max-h-48 overflow-auto rounded bg-white py-1 text-sm shadow-lg border border-gray-200">
+        <Combobox.Options className="absolute z-10 w-full mt-1 max-h-48 overflow-auto rounded bg-theme-surface py-1 text-sm shadow-lg border border-theme-border">
           {filteredPlayers.length === 0 && query !== '' ? (
-            <div className="px-2 py-1 text-gray-500">Nothing found.</div>
+            <div className="px-2 py-1 text-theme-text-muted">Nothing found.</div>
           ) : (
             filteredPlayers.map((player) => (
               <Combobox.Option
                 key={player}
                 value={player}
                 className={({ active }) =>
-                  `px-2 py-1 cursor-pointer ${active ? 'bg-blue-50 text-blue-700' : 'text-gray-900'}`
+                  `px-2 py-1 cursor-pointer dropdown-option ${
+                    active ? 'bg-theme-highlight text-theme-highlight-text' : 'text-theme-text'
+                  }`
                 }
               >
                 {player}

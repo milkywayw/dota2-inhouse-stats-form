@@ -1,0 +1,307 @@
+/* Transition Classes */
+.theme-transition-long {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: 1500ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-transition-short {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-no-transition {
+  transition: none !important;
+}
+
+/* Light Theme */
+:root, [data-theme="light"] {
+  /* Team Colors */
+  --theme-radiant: #92A525;
+  --theme-dire: #C23C2A;
+  
+  /* Surface Colors */
+  --theme-surface: #FFFFFF;
+  --theme-surface-secondary: #F9FAFB;
+  --theme-surface-input: #FFFFFF; /* Keeping inputs consistent with surface */
+  
+  /* Border Colors */
+  --theme-border: #E5E7EB;
+  --theme-border-muted: #D1D5DB;
+  --theme-error: #EF4444;
+  
+  /* Text Colors */
+  --theme-text: #111827;
+  --theme-text-muted: #9CA3AF;
+  
+  /* Interaction Colors */
+  --theme-highlight: #EFF6FF;
+  --theme-highlight-text: #1D4ED8;
+  
+  /* Winner/Trophy Colors */
+  --theme-winner: #DAA520;
+  --theme-winner-text: #FFFFFF;
+  
+  /* Primary Action Colors */
+  --theme-primary: #2563EB;
+  --theme-primary-dark: #1D4ED8;
+  --theme-primary-text: #FFFFFF;
+  
+  /* Tooltip Colors */
+  --theme-tooltip: #1F2937;
+  --theme-tooltip-text: #FFFFFF;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  /* Team Colors */
+  --theme-radiant: #B4CC2E;
+  --theme-dire: #E64A3E;
+  
+  /* Surface Colors */
+  --theme-surface: #1F2937;
+  --theme-surface-secondary: #374151;
+  --theme-surface-input: #2C3644; /* Slightly lighter than base for depth */
+  
+  /* Border Colors */
+  --theme-border: #4B5563;
+  --theme-border-muted: #6B7280;
+  --theme-error: #EF4444;
+  
+  /* Text Colors */
+  --theme-text: #F9FAFB;
+  --theme-text-muted: #9CA3AF;
+  
+  /* Interaction Colors */
+  --theme-highlight: #2563EB;
+  --theme-highlight-text: #FFFFFF;
+  
+  /* Winner/Trophy Colors */
+  --theme-winner: #FFC933;
+  --theme-winner-text: #000000;
+  
+  /* Primary Action Colors */
+  --theme-primary: #3B82F6;
+  --theme-primary-dark: #2563EB;
+  --theme-primary-text: #FFFFFF;
+  
+  /* Tooltip Colors */
+  --theme-tooltip: #F9FAFB;
+  --theme-tooltip-text: #111827;
+}
+
+/* Solarized Light Theme */
+[data-theme="solarized"] {
+  /* Base Colors */
+  --theme-surface: #FDF6E3;      /* Base3: Main background */
+  --theme-surface-secondary: #EEE8D5; /* Base2: Secondary */
+  --theme-surface-input: #EEE8D5;    /* Using Base2 for inputs */
+  
+  /* Team Colors */
+  --theme-radiant: #859900;      /* Green */
+  --theme-dire: #DC322F;         /* Red */
+  
+  /* Border Colors */
+  --theme-border: #93A1A1;       /* Base1 */
+  --theme-border-muted: #839496; /* Base0 */
+  --theme-error: #DC322F;        /* Red */
+  
+  /* Text Colors */
+  --theme-text: #657B83;         /* Base00 */
+  --theme-text-muted: #93A1A1;   /* Base1 */
+  
+  /* Interaction Colors */
+  --theme-highlight: #DFD9C3;    /* Custom */
+  --theme-highlight-text: #586E75; /* Base01 */
+  
+  /* Winner/Trophy Colors */
+  --theme-winner: #B58900;       /* Yellow */
+  --theme-winner-text: #FDF6E3;  /* Base3 */
+  
+  /* Primary Action Colors */
+  --theme-primary: #268BD2;      /* Blue */
+  --theme-primary-dark: #2075B0; /* Darker Blue */
+  --theme-primary-text: #FDF6E3; /* Base3 */
+  
+  /* Tooltip Colors */
+  --theme-tooltip: #586E75;      /* Base01 */
+  --theme-tooltip-text: #FDF6E3; /* Base3 */
+}
+
+/* Melange Theme */
+[data-theme="melange"] {
+  /* Base Colors */
+  --theme-surface: #2A1F1D;      /* Deep rich brown */
+  --theme-surface-secondary: #352923; /* Lighter brown */
+  --theme-surface-input: #3E302A;    /* Even lighter for inputs */
+  
+  /* Team Colors */
+  --theme-radiant: #9B8250;      /* Desert sand gold */
+  --theme-dire: #8E392D;         /* Rusty red */
+  
+  /* Border Colors */
+  --theme-border: #574A44;       /* Medium brown */
+  --theme-border-muted: #463831; /* Darker brown */
+  --theme-error: #A14B3C;        /* Terracotta */
+  
+  /* Text Colors */
+  --theme-text: #E6D5C1;         /* Light sand */
+  --theme-text-muted: #947E6E;   /* Muted sand */
+  
+  /* Interaction Colors */
+  --theme-highlight: #4A372F;    /* Rich brown */
+  --theme-highlight-text: #E6D5C1; /* Light sand */
+  
+  /* Winner/Trophy Colors */
+  --theme-winner: #C4A256;       /* Spice gold */
+  --theme-winner-text: #2A1F1D;  /* Deep brown */
+  
+  /* Primary Action Colors */
+  --theme-primary: #B67D47;      /* Cinnamon */
+  --theme-primary-dark: #8E5C30; /* Dark cinnamon */
+  --theme-primary-text: #E6D5C1; /* Light sand */
+  
+  /* Tooltip Colors */
+  --theme-tooltip: #4A372F;      /* Rich brown */
+  --theme-tooltip-text: #E6D5C1; /* Light sand */
+}
+
+/* Vaporwave Theme */
+[data-theme="vaporwave"] {
+  /* Team Colors */
+  --theme-radiant: #00FF9F;
+  --theme-dire: #FF00FF;
+  
+  /* Surface Colors */
+  --theme-surface: #2D1B69;
+  --theme-surface-secondary: #1F1147;
+  --theme-surface-input: #382180; /* Slightly lighter purple for inputs */
+  
+  /* Border Colors */
+  --theme-border: #FF00FF;
+  --theme-border-muted: #B14EFF;
+  --theme-error: #FF0055;
+  
+  /* Text Colors */
+  --theme-text: #00FFF0;
+  --theme-text-muted: #B14EFF;
+  
+  /* Interaction Colors */
+  --theme-highlight: #FF00FF;
+  --theme-highlight-text: #00FFF0;
+  
+  /* Winner/Trophy Colors */
+  --theme-winner: #FFD700;
+  --theme-winner-text: #2D1B69;
+  
+  /* Primary Action Colors */
+  --theme-primary: #FF00FF;
+  --theme-primary-dark: #B14EFF;
+  --theme-primary-text: #00FFF0;
+  
+  /* Tooltip Colors */
+  --theme-tooltip: #1F1147;
+  --theme-tooltip-text: #00FFF0;
+}
+
+/* Tokyo Night Theme */
+[data-theme="tokyo-night"] {
+  /* Team Colors */
+  --theme-radiant: #9ECE6A;
+  --theme-dire: #F7768E;
+  
+  /* Surface Colors */
+  --theme-surface: #1A1B26;
+  --theme-surface-secondary: #2F334D;
+  --theme-surface-input: #24283B; /* Classic Tokyo Night editor background */
+  
+  /* Border Colors */
+  --theme-border: #565F89;
+  --theme-border-muted: #414868;
+  --theme-error: #F7768E;
+  
+  /* Text Colors */
+  --theme-text: #C0CAF5;
+  --theme-text-muted: #787C99;
+  
+  /* Interaction Colors */
+  --theme-highlight: #BB9AF7;
+  --theme-highlight-text: #1A1B26;
+  
+  /* Winner/Trophy Colors */
+  --theme-winner: #E0AF68;
+  --theme-winner-text: #1A1B26;
+  
+  /* Primary Action Colors */
+  --theme-primary: #7AA2F7;
+  --theme-primary-dark: #5D7FCC;
+  --theme-primary-text: #1A1B26;
+  
+  /* Tooltip Colors */
+  --theme-tooltip: #2F334D;
+  --theme-tooltip-text: #C0CAF5;
+}
+
+/* Input Styling */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+.combobox-input {
+  background-color: var(--theme-surface-input);
+  color: var(--theme-text);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  @apply theme-transition-long;
+}
+
+input:focus {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05), 
+              0 0 0 2px var(--theme-border-muted);
+  outline: none;
+}
+
+input::placeholder {
+  color: var(--theme-text-muted);
+}
+
+/* Utility Classes */
+.bg-theme-surface { background-color: var(--theme-surface); @apply theme-transition-long; }
+.bg-theme-surface-secondary { background-color: var(--theme-surface-secondary); @apply theme-transition-long; }
+.bg-theme-primary { background-color: var(--theme-primary); @apply theme-transition-long; }
+.bg-theme-primary-dark { background-color: var(--theme-primary-dark); @apply theme-transition-long; }
+.bg-theme-winner { background-color: var(--theme-winner); @apply theme-transition-short; }
+.bg-theme-highlight { background-color: var(--theme-highlight); @apply theme-no-transition; }
+.bg-theme-tooltip { background-color: var(--theme-tooltip); @apply theme-transition-long; }
+
+.text-theme-text { color: var(--theme-text); @apply theme-transition-long; }
+.text-theme-text-muted { color: var(--theme-text-muted); @apply theme-transition-long; }
+.text-theme-primary-text { color: var(--theme-primary-text); @apply theme-transition-long; }
+.text-theme-winner-text { color: var(--theme-winner-text); @apply theme-transition-short; }
+.text-theme-highlight-text { color: var(--theme-highlight-text); @apply theme-no-transition; }
+.text-theme-tooltip-text { color: var(--theme-tooltip-text); @apply theme-transition-long; }
+.text-theme-radiant { color: var(--theme-radiant); @apply theme-transition-long; }
+.text-theme-dire { color: var(--theme-dire); @apply theme-transition-long; }
+
+.border-theme-border { border-color: var(--theme-border); @apply theme-transition-long; }
+.border-theme-border-muted { border-color: var(--theme-border-muted); @apply theme-transition-long; }
+.border-theme-error { border-color: var(--theme-error); @apply theme-transition-long; }
+.border-theme-winner { border-color: var(--theme-winner); @apply theme-transition-short; }
+.border-t-theme-tooltip { border-top-color: var(--theme-tooltip); @apply theme-transition-long; }
+
+.dropdown-option {
+  transition: none !important;
+}
+
+/* Hover States */
+.hover\:bg-theme-primary-dark:hover { background-color: var(--theme-primary-dark); @apply theme-transition-short; }
+.hover\:border-theme-winner:hover { border-color: var(--theme-winner); @apply theme-transition-short; }
+.hover\:bg-theme-surface-secondary:hover { background-color: var(--theme-surface-secondary); @apply theme-transition-short; }
+
+/* Theme Toggle */
+.theme-toggle-button {
+  @apply theme-transition-short;
+}
+
+.theme-toggle-button:hover {
+  transform: scale(1.1) rotate(180deg);
+}

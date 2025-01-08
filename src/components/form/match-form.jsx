@@ -76,7 +76,7 @@ const MatchForm = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
+    <div className="max-w-7xl mx-auto p-4 transition-colors">
       {/* Header Section */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold mb-4">Match Entry</h1>
@@ -87,7 +87,7 @@ const MatchForm = () => {
               type="date"
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              className={`px-3 py-2 rounded border ${errors.date && touched ? 'border-red-500' : 'border-gray-200'}`}
+              className={`px-3 py-2 rounded border ${errors.date && touched ? 'border-theme-error' : 'border-theme-border'}`}
             />
           </div>
           <div className="flex-1">
@@ -97,7 +97,7 @@ const MatchForm = () => {
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               placeholder="Optional notes about the match"
-              className="w-full px-3 py-2 rounded border border-gray-200"
+              className="w-full px-3 py-2 rounded border border-theme-border"
             />
           </div>
         </div>
@@ -110,7 +110,7 @@ const MatchForm = () => {
           {['radiant', 'dire'].map((team) => (
             <div key={`${team}-bans`}>
               <h3
-                className={`text-sm font-medium mb-2 ${team === 'radiant' ? 'text-[#92A525]' : 'text-[#C23C2A]'}`}
+                className={`text-sm font-medium mb-2 ${team === 'radiant' ? 'text-theme-radiant' : 'text-theme-dire'}`}
               >
                 {team.charAt(0).toUpperCase() + team.slice(1)} Bans
               </h3>
@@ -146,17 +146,17 @@ const MatchForm = () => {
                 }
                 className={`p-2 rounded-full transition-colors border-2 ${
                   formData.winner === team
-                    ? 'bg-[#DAA520] text-white border-[#DAA520]'
+                    ? 'bg-theme-winner text-theme-winner-text border-theme-winner'
                     : touched && !formData.winner
-                      ? 'border-red-500'
-                      : 'border-gray-300 hover:border-[#DAA520]'
+                      ? 'border-theme-error'
+                      : 'border-theme-border-muted hover:border-theme-winner'
                 }`}
               >
                 <Trophy className="w-5 h-5" />
               </button>
             </Tooltip>
             <h2
-              className={`text-xl font-semibold ${team === 'radiant' ? 'text-[#92A525]' : 'text-[#C23C2A]'}`}
+              className={`text-xl font-semibold ${team === 'radiant' ? 'text-theme-radiant' : 'text-theme-dire'}`}
             >
               {team.charAt(0).toUpperCase() + team.slice(1)}
             </h2>
@@ -204,11 +204,11 @@ const MatchForm = () => {
                     }}
                     className={`w-16 px-2 py-1 rounded border transition-colors ${
                       touched && !formData[`${team}Players`][index].kills
-                        ? 'border-red-500'
-                        : 'border-gray-200'
+                        ? 'border-theme-error'
+                        : 'border-theme-border'
                     }`}
                   />
-                  <span className="mx-1 text-gray-500">/</span>
+                  <span className="mx-1 text-theme-text-muted">/</span>
                   <input
                     key={`${team}-${role}-deaths`}
                     type="number"
@@ -222,11 +222,11 @@ const MatchForm = () => {
                     }}
                     className={`w-16 px-2 py-1 rounded border transition-colors ${
                       touched && !formData[`${team}Players`][index].deaths
-                        ? 'border-red-500'
-                        : 'border-gray-200'
+                        ? 'border-theme-error'
+                        : 'border-theme-border'
                     }`}
                   />
-                  <span className="mx-1 text-gray-500">/</span>
+                  <span className="mx-1 text-theme-text-muted">/</span>
                   <input
                     key={`${team}-${role}-assists`}
                     type="number"
@@ -240,8 +240,8 @@ const MatchForm = () => {
                     }}
                     className={`w-16 px-2 py-1 rounded border transition-colors ${
                       touched && !formData[`${team}Players`][index].assists
-                        ? 'border-red-500'
-                        : 'border-gray-200'
+                        ? 'border-theme-error'
+                        : 'border-theme-border'
                     }`}
                   />
                 </div>
@@ -257,8 +257,8 @@ const MatchForm = () => {
                     }}
                     className={`p-2 rounded-full transition-colors border-2 ${
                       formData[`${team}Captain`] === index
-                        ? 'bg-[#DAA520] text-white border-[#DAA520]'
-                        : 'border-gray-300 hover:border-[#DAA520]'
+                        ? 'bg-theme-winner text-theme-winner-text border-theme-winner'
+                        : 'border-theme-border-muted hover:border-theme-winner'
                     }`}
                   >
                     <Crown className="w-5 h-5" />
@@ -273,7 +273,7 @@ const MatchForm = () => {
       <button
         type="submit"
         onClick={handleSubmit}
-        className="w-full py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-medium"
+        className="w-full py-3 rounded bg-theme-primary hover:bg-theme-primary-dark text-theme-primary-text font-medium"
       >
         Submit Match
       </button>
