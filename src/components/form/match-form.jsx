@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Trophy, Crown } from 'lucide-react';
+import Tooltip from '../ui/tooltip';
 import HeroSelector from '../ui/hero-selector';
 import PlayerSelector from '../ui/player-selector';
 import { heroes } from '../../data/heroes';
 import { players } from '../../data/players';
 
 const ROLES = ['Carry', 'Mid', 'Off', 'Soft', 'Hard'];
+const KDA_LABELS = { kills: 'K', deaths: 'D', assists: 'A' };
 
 const MatchForm = () => {
   const [formData, setFormData] = useState({
@@ -136,19 +138,23 @@ const MatchForm = () => {
       {['radiant', 'dire'].map((team) => (
         <div key={team} className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, winner: team })}
-              className={`p-2 rounded-full transition-colors ${
-                formData.winner === team
-                  ? 'bg-[#DAA520] text-white'
-                  : touched && !formData.winner
-                    ? 'border-2 border-red-500'
-                    : 'border-2 border-gray-300 hover:border-[#DAA520]'
-              }`}
-            >
-              <Trophy className="w-5 h-5" />
-            </button>
+            <Tooltip content={`Mark ${team} team as winner!`}>
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData({ ...formData, winner: formData.winner === team ? null : team })
+                }
+                className={`p-2 rounded-full transition-colors border-2 ${
+                  formData.winner === team
+                    ? 'bg-[#DAA520] text-white border-[#DAA520]'
+                    : touched && !formData.winner
+                      ? 'border-red-500'
+                      : 'border-gray-300 hover:border-[#DAA520]'
+                }`}
+              >
+                <Trophy className="w-5 h-5" />
+              </button>
+            </Tooltip>
             <h2
               className={`text-xl font-semibold ${team === 'radiant' ? 'text-[#92A525]' : 'text-[#C23C2A]'}`}
             >
@@ -190,13 +196,14 @@ const MatchForm = () => {
                       key={`${team}-${role}-${stat}`}
                       type="number"
                       min="0"
+                      placeholder={KDA_LABELS[stat]}
                       value={formData[`${team}Players`][index][stat]}
                       onChange={(e) => {
                         const newPlayers = [...formData[`${team}Players`]];
                         newPlayers[index] = { ...newPlayers[index], [stat]: e.target.value };
                         setFormData({ ...formData, [`${team}Players`]: newPlayers });
                       }}
-                      className={`w-16 px-2 py-1 rounded border ${
+                      className={`w-16 px-2 py-1 rounded border transition-colors ${
                         touched && !formData[`${team}Players`][index][stat]
                           ? 'border-red-500'
                           : 'border-gray-200'
@@ -204,23 +211,25 @@ const MatchForm = () => {
                     />
                   ))}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (formData[`${team}Captain`] === index) {
-                      setFormData({ ...formData, [`${team}Captain`]: null });
-                    } else {
-                      setFormData({ ...formData, [`${team}Captain`]: index });
-                    }
-                  }}
-                  className={`p-2 rounded-full transition-colors ${
-                    formData[`${team}Captain`] === index
-                      ? 'bg-[#DAA520] text-white'
-                      : 'border-2 border-gray-300 hover:border-[#DAA520]'
-                  }`}
-                >
-                  <Crown className="w-5 h-5" />
-                </button>
+                <Tooltip content="Mark this player as the team drafter!">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (formData[`${team}Captain`] === index) {
+                        setFormData({ ...formData, [`${team}Captain`]: null });
+                      } else {
+                        setFormData({ ...formData, [`${team}Captain`]: index });
+                      }
+                    }}
+                    className={`p-2 rounded-full transition-colors border-2 ${
+                      formData[`${team}Captain`] === index
+                        ? 'bg-[#DAA520] text-white border-[#DAA520]'
+                        : 'border-gray-300 hover:border-[#DAA520]'
+                    }`}
+                  >
+                    <Crown className="w-5 h-5" />
+                  </button>
+                </Tooltip>
               </div>
             ))}
           </div>
