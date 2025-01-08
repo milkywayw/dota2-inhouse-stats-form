@@ -21,8 +21,8 @@ const HeroSelector = ({
     <Combobox value={selectedHero} onChange={onChange} disabled={disabled}>
       <div className="relative">
         <div
-          className={`flex bg-white rounded overflow-hidden ${
-            error ? 'border-2 border-red-500' : 'border border-gray-200'
+          className={`flex bg-white rounded overflow-hidden border transition-colors ${
+            error ? 'border-red-500' : 'border-gray-200'
           }`}
         >
           <Combobox.Input
