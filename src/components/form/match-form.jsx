@@ -11,7 +11,7 @@ const MatchForm = () => {
   const [formData, setFormData] = useState({
     date: '',
     notes: '',
-    winner: null, // 'radiant' or 'dire'
+    winner: null,
     radiantCaptain: null,
     direCaptain: null,
     radiantBans: Array(7).fill(null),
@@ -20,7 +20,28 @@ const MatchForm = () => {
     direPlayers: Array(5).fill({ player: null, hero: null, kills: '', deaths: '', assists: '' }),
   });
 
+  const [touched, setTouched] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.date) newErrors.date = true;
+    if (!formData.winner) newErrors.winner = true;
+
+    ['radiant', 'dire'].forEach((team) => {
+      formData[`${team}Players`].forEach((player, idx) => {
+        if (!player.player) newErrors[`${team}Player${idx}`] = true;
+        if (!player.hero) newErrors[`${team}Hero${idx}`] = true;
+        if (!player.kills) newErrors[`${team}Kills${idx}`] = true;
+        if (!player.deaths) newErrors[`${team}Deaths${idx}`] = true;
+        if (!player.assists) newErrors[`${team}Assists${idx}`] = true;
+      });
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const getAvailableHeroes = (currentHero) => {
     const selectedHeroes = [
@@ -44,127 +65,102 @@ const MatchForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setTouched(true);
 
-    // Validation
-    const newErrors = {};
-
-    if (!formData.date) newErrors.date = 'Required';
-    if (!formData.winner) newErrors.winner = 'Required';
-
-    // Validate all players and heroes are selected
-    ['radiant', 'dire'].forEach((team) => {
-      formData[`${team}Players`].forEach((player, idx) => {
-        if (!player.player) newErrors[`${team}Player${idx}`] = 'Required';
-        if (!player.hero) newErrors[`${team}Hero${idx}`] = 'Required';
-        if (!player.kills) newErrors[`${team}Kills${idx}`] = 'Required';
-        if (!player.deaths) newErrors[`${team}Deaths${idx}`] = 'Required';
-        if (!player.assists) newErrors[`${team}Assists${idx}`] = 'Required';
-      });
-    });
-
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
+    if (validate()) {
       console.log('Form data:', formData);
       // TODO: Submit to your backend
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-4 space-y-8">
+    <div className="max-w-7xl mx-auto p-4">
       {/* Header Section */}
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Match Entry</h1>
-        <div className="grid grid-cols-2 gap-4">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold mb-4">Match Entry</h1>
+        <div className="flex gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Date of Inhouse</label>
+            <label className="block text-sm mb-1">Date of Inhouse</label>
             <input
               type="date"
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              className={`mt-1 block w-full rounded-md border ${errors.date ? 'border-red-500' : 'border-gray-300'}`}
+              className={`px-3 py-2 rounded border ${errors.date && touched ? 'border-red-500' : 'border-gray-200'}`}
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Notes</label>
+          <div className="flex-1">
+            <label className="block text-sm mb-1">Notes</label>
             <input
               type="text"
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               placeholder="Optional notes about the match"
-              className="mt-1 block w-full rounded-md border border-gray-300"
+              className="w-full px-3 py-2 rounded border border-gray-200"
             />
           </div>
         </div>
       </div>
 
       {/* Bans Section */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Bans</h2>
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Bans</h2>
         <div className="space-y-4">
-          {/* Radiant Bans */}
-          <div>
-            <h3 className="text-lg font-medium text-radiant">Radiant Bans</h3>
-            <div className="grid grid-cols-7 gap-2">
-              {formData.radiantBans.map((ban, index) => (
-                <HeroSelector
-                  key={`radiant-ban-${index}`}
-                  selectedHero={ban}
-                  onChange={(hero) => {
-                    const newBans = [...formData.radiantBans];
-                    newBans[index] = hero;
-                    setFormData({ ...formData, radiantBans: newBans });
-                  }}
-                  availableHeroes={getAvailableHeroes(ban)}
-                />
-              ))}
+          {['radiant', 'dire'].map((team) => (
+            <div key={`${team}-bans`}>
+              <h3
+                className={`text-sm font-medium mb-2 ${team === 'radiant' ? 'text-[#92A525]' : 'text-[#C23C2A]'}`}
+              >
+                {team.charAt(0).toUpperCase() + team.slice(1)} Bans
+              </h3>
+              <div className="grid grid-cols-7 gap-2">
+                {formData[`${team}Bans`].map((ban, index) => (
+                  <HeroSelector
+                    key={`${team}-ban-${index}`}
+                    selectedHero={ban}
+                    onChange={(hero) => {
+                      const newBans = [...formData[`${team}Bans`]];
+                      newBans[index] = hero;
+                      setFormData({ ...formData, [`${team}Bans`]: newBans });
+                    }}
+                    availableHeroes={getAvailableHeroes(ban)}
+                    error={touched && !ban}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-
-          {/* Dire Bans */}
-          <div>
-            <h3 className="text-lg font-medium text-dire">Dire Bans</h3>
-            <div className="grid grid-cols-7 gap-2">
-              {formData.direBans.map((ban, index) => (
-                <HeroSelector
-                  key={`dire-ban-${index}`}
-                  selectedHero={ban}
-                  onChange={(hero) => {
-                    const newBans = [...formData.direBans];
-                    newBans[index] = hero;
-                    setFormData({ ...formData, direBans: newBans });
-                  }}
-                  availableHeroes={getAvailableHeroes(ban)}
-                />
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
       {/* Teams Section */}
       {['radiant', 'dire'].map((team) => (
-        <div key={team} className="space-y-4">
-          <div className="flex items-center gap-4">
-            <h2 className={`text-xl font-semibold text-${team}`}>
-              {team.charAt(0).toUpperCase() + team.slice(1)}
-            </h2>
+        <div key={team} className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
             <button
               type="button"
               onClick={() => setFormData({ ...formData, winner: team })}
-              className={`p-2 rounded-full ${
-                formData.winner === team ? `bg-${team} text-white` : 'bg-gray-100 text-gray-400'
+              className={`p-2 rounded-full transition-colors ${
+                formData.winner === team
+                  ? 'bg-[#DAA520] text-white'
+                  : touched && !formData.winner
+                    ? 'border-2 border-red-500'
+                    : 'border-2 border-gray-300 hover:border-[#DAA520]'
               }`}
             >
               <Trophy className="w-5 h-5" />
             </button>
+            <h2
+              className={`text-xl font-semibold ${team === 'radiant' ? 'text-[#92A525]' : 'text-[#C23C2A]'}`}
+            >
+              {team.charAt(0).toUpperCase() + team.slice(1)}
+            </h2>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {ROLES.map((role, index) => (
-              <div key={`${team}-${role}`} className="grid grid-cols-12 gap-2 items-center">
-                <div className="col-span-2 font-medium">{role}</div>
-                <div className="col-span-3">
+              <div key={`${team}-${role}`} className="flex items-center gap-4">
+                <div className="w-16 text-sm font-medium">{role}</div>
+                <div className="w-64">
                   <PlayerSelector
                     selectedPlayer={formData[`${team}Players`][index].player}
                     onChange={(player) => {
@@ -173,9 +169,10 @@ const MatchForm = () => {
                       setFormData({ ...formData, [`${team}Players`]: newPlayers });
                     }}
                     availablePlayers={getAvailablePlayers(formData[`${team}Players`][index].player)}
+                    error={touched && errors[`${team}Player${index}`]}
                   />
                 </div>
-                <div className="col-span-3">
+                <div className="w-64">
                   <HeroSelector
                     selectedHero={formData[`${team}Players`][index].hero}
                     onChange={(hero) => {
@@ -184,9 +181,10 @@ const MatchForm = () => {
                       setFormData({ ...formData, [`${team}Players`]: newPlayers });
                     }}
                     availableHeroes={getAvailableHeroes(formData[`${team}Players`][index].hero)}
+                    error={touched && errors[`${team}Hero${index}`]}
                   />
                 </div>
-                <div className="col-span-3 grid grid-cols-3 gap-1">
+                <div className="flex gap-2">
                   {['kills', 'deaths', 'assists'].map((stat) => (
                     <input
                       key={`${team}-${role}-${stat}`}
@@ -198,48 +196,45 @@ const MatchForm = () => {
                         newPlayers[index] = { ...newPlayers[index], [stat]: e.target.value };
                         setFormData({ ...formData, [`${team}Players`]: newPlayers });
                       }}
-                      className={`w-full rounded border ${
-                        errors[`${team}${stat.charAt(0).toUpperCase() + stat.slice(1)}${index}`]
+                      className={`w-16 px-2 py-1 rounded border ${
+                        touched && !formData[`${team}Players`][index][stat]
                           ? 'border-red-500'
-                          : 'border-gray-300'
+                          : 'border-gray-200'
                       }`}
                     />
                   ))}
                 </div>
-                <div className="col-span-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (formData[`${team}Captain`] === index) {
-                        setFormData({ ...formData, [`${team}Captain`]: null });
-                      } else {
-                        setFormData({ ...formData, [`${team}Captain`]: index });
-                      }
-                    }}
-                    className={`p-2 rounded-full ${
-                      formData[`${team}Captain`] === index
-                        ? `bg-${team} text-white`
-                        : 'bg-gray-100 text-gray-400'
-                    }`}
-                  >
-                    <Crown className="w-5 h-5" />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (formData[`${team}Captain`] === index) {
+                      setFormData({ ...formData, [`${team}Captain`]: null });
+                    } else {
+                      setFormData({ ...formData, [`${team}Captain`]: index });
+                    }
+                  }}
+                  className={`p-2 rounded-full transition-colors ${
+                    formData[`${team}Captain`] === index
+                      ? 'bg-[#DAA520] text-white'
+                      : 'border-2 border-gray-300 hover:border-[#DAA520]'
+                  }`}
+                >
+                  <Crown className="w-5 h-5" />
+                </button>
               </div>
             ))}
           </div>
         </div>
       ))}
 
-      <div className="mt-8">
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white rounded-lg py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Submit Match
-        </button>
-      </div>
-    </form>
+      <button
+        type="submit"
+        onClick={handleSubmit}
+        className="w-full py-3 rounded bg-blue-600 hover:bg-blue-700 text-white font-medium"
+      >
+        Submit Match
+      </button>
+    </div>
   );
 };
 
