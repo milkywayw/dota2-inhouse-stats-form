@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Combobox } from '@headlessui/react';
 import { ChevronDown } from 'lucide-react';
+import { getHeroImagePath } from '../../utils/hero-utils';
 
 const HeroSelector = ({
   selectedHero,
@@ -25,12 +26,21 @@ const HeroSelector = ({
             error ? 'border-red-500' : 'border-gray-200'
           }`}
         >
-          <Combobox.Input
-            className="w-full px-2 py-1 text-sm border-none focus:ring-0"
-            onChange={(event) => setQuery(event.target.value)}
-            displayValue={(hero) => hero}
-            placeholder={placeholder}
-          />
+          <div className="flex items-center flex-1">
+            {selectedHero && (
+              <img
+                src={getHeroImagePath(selectedHero, 'small')}
+                alt={selectedHero}
+                className="w-8 h-4.5 object-cover ml-1" // 16:9 ratio maintained
+              />
+            )}
+            <Combobox.Input
+              className="w-full px-2 py-1 text-sm border-none focus:ring-0"
+              onChange={(event) => setQuery(event.target.value)}
+              displayValue={(hero) => hero}
+              placeholder={placeholder}
+            />
+          </div>
           <Combobox.Button className="px-2 bg-gray-50 border-l border-gray-200">
             <ChevronDown className="h-4 w-4 text-gray-400" />
           </Combobox.Button>
@@ -47,7 +57,16 @@ const HeroSelector = ({
                   `px-2 py-1 cursor-pointer ${active ? 'bg-blue-50 text-blue-700' : 'text-gray-900'}`
                 }
               >
-                {hero}
+                {({ active }) => (
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={getHeroImagePath(hero, 'small')}
+                      alt={hero}
+                      className="w-6 h-3.5 object-cover" // 16:9 ratio maintained
+                    />
+                    <span>{hero}</span>
+                  </div>
+                )}
               </Combobox.Option>
             ))
           )}
