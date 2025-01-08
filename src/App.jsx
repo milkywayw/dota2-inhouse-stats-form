@@ -1,6 +1,7 @@
 import React from 'react';
 import MatchForm from './components/form/match-form';
-import './styles/themes.css';
+import './themes/color-schemes.css';
+import './styles/utils.css';
 import ThemeToggle from './components/ui/theme-toggle';
 
 function App() {
