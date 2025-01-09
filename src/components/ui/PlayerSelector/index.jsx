@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { usePlayerSearch } from './usePlayerSearch';
 import { Combobox } from '@headlessui/react';
 import { ChevronDown } from 'lucide-react';
 
@@ -10,21 +10,22 @@ const PlayerSelector = ({
   disabled = false,
   error = false,
 }) => {
-  const [query, setQuery] = useState('');
+  const { query, setQuery, filteredPlayers } = usePlayerSearch(availablePlayers);
 
-  const filteredPlayers =
-    query === ''
-      ? availablePlayers
-      : availablePlayers.filter((player) => player.toLowerCase().includes(query.toLowerCase()));
+  const getComboboxClasses = (error) =>
+    `flex rounded overflow-hidden border transition-colors ${
+      error ? 'border-theme-error' : 'border-theme-border'
+    }`;
+
+  const getOptionClasses = (active) =>
+    `px-2 py-1 cursor-pointer dropdown-option ${
+      active ? 'bg-theme-highlight text-theme-highlight-text' : 'text-theme-text'
+    }`;
 
   return (
     <Combobox value={selectedPlayer} onChange={onChange} disabled={disabled}>
       <div className="relative">
-        <div
-          className={`flex rounded overflow-hidden border transition-colors ${
-            error ? 'border-theme-error' : 'border-theme-border'
-          }`}
-        >
+        <div className={getComboboxClasses(error)}>
           <Combobox.Input
             className="w-full px-2 py-1 text-sm border-none focus:ring-0 combobox-input text-theme-text placeholder-theme-text-muted"
             onChange={(event) => setQuery(event.target.value)}
@@ -43,11 +44,7 @@ const PlayerSelector = ({
               <Combobox.Option
                 key={player}
                 value={player}
-                className={({ active }) =>
-                  `px-2 py-1 cursor-pointer dropdown-option ${
-                    active ? 'bg-theme-highlight text-theme-highlight-text' : 'text-theme-text'
-                  }`
-                }
+                className={({ active }) => getOptionClasses(active)}
               >
                 {player}
               </Combobox.Option>
