@@ -43,5 +43,5 @@ export const players = [
   'TacoCannon()',
   'Thraxia',
   'You will not like me',
-  'Zythx',
+  'Zthyx',
 ];

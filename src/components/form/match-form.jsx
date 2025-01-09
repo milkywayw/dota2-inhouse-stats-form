@@ -71,52 +71,101 @@ const MatchForm = () => {
     setTouched(true);
 
     if (validate()) {
-      const row = {
+      const data = {
         date: formData.date,
-        notes: formData.notes,
         winner: formData.winner,
-        ...formData.radiantPlayers.reduce((acc, player, index) => {
-          const prefix = `p${index + 1}_`;
-          return {
-            ...acc,
-            [`${prefix}name`]: player.player,
-            [`${prefix}hero`]: player.hero,
-            [`${prefix}position`]: ROLES[index],
-            [`${prefix}team`]: 'radiant',
-            [`${prefix}kills`]: player.kills,
-            [`${prefix}deaths`]: player.deaths,
-            [`${prefix}assists`]: player.assists,
-          };
-        }, {}),
-        ...formData.direPlayers.reduce((acc, player, index) => {
-          const prefix = `p${index + 6}_`;
-          return {
-            ...acc,
-            [`${prefix}name`]: player.player,
-            [`${prefix}hero`]: player.hero,
-            [`${prefix}position`]: ROLES[index],
-            [`${prefix}team`]: 'dire',
-            [`${prefix}kills`]: player.kills,
-            [`${prefix}deaths`]: player.deaths,
-            [`${prefix}assists`]: player.assists,
-          };
-        }, {}),
-        ...formData.radiantBans.reduce((acc, ban, index) => {
-          return {
-            ...acc,
-            [`radiant_ban${index + 1}`]: ban,
-          };
-        }, {}),
-        ...formData.direBans.reduce((acc, ban, index) => {
-          return {
-            ...acc,
-            [`dire_ban${index + 1}`]: ban,
-          };
-        }, {}),
+        notes: formData.notes,
+        rad_carry_name: formData.radiantPlayers[0].player,
+        rad_carry_hero: formData.radiantPlayers[0].hero,
+        rad_carry_kills: formData.radiantPlayers[0].kills,
+        rad_carry_deaths: formData.radiantPlayers[0].deaths,
+        rad_carry_assists: formData.radiantPlayers[0].assists,
+        rad_mid_name: formData.radiantPlayers[1].player,
+        rad_mid_hero: formData.radiantPlayers[1].hero,
+        rad_mid_kills: formData.radiantPlayers[1].kills,
+        rad_mid_deaths: formData.radiantPlayers[1].deaths,
+        rad_mid_assists: formData.radiantPlayers[1].assists,
+        rad_off_name: formData.radiantPlayers[2].player,
+        rad_off_hero: formData.radiantPlayers[2].hero,
+        rad_off_kills: formData.radiantPlayers[2].kills,
+        rad_off_deaths: formData.radiantPlayers[2].deaths,
+        rad_off_assists: formData.radiantPlayers[2].assists,
+        rad_soft_name: formData.radiantPlayers[3].player,
+        rad_soft_hero: formData.radiantPlayers[3].hero,
+        rad_soft_kills: formData.radiantPlayers[3].kills,
+        rad_soft_deaths: formData.radiantPlayers[3].deaths,
+        rad_soft_assists: formData.radiantPlayers[3].assists,
+        rad_hard_name: formData.radiantPlayers[4].player,
+        rad_hard_hero: formData.radiantPlayers[4].hero,
+        rad_hard_kills: formData.radiantPlayers[4].kills,
+        rad_hard_deaths: formData.radiantPlayers[4].deaths,
+        rad_hard_assists: formData.radiantPlayers[4].assists,
+        dire_carry_name: formData.direPlayers[0].player,
+        dire_carry_hero: formData.direPlayers[0].hero,
+        dire_carry_kills: formData.direPlayers[0].kills,
+        dire_carry_deaths: formData.direPlayers[0].deaths,
+        dire_carry_assists: formData.direPlayers[0].assists,
+        dire_mid_name: formData.direPlayers[1].player,
+        dire_mid_hero: formData.direPlayers[1].hero,
+        dire_mid_kills: formData.direPlayers[1].kills,
+        dire_mid_deaths: formData.direPlayers[1].deaths,
+        dire_mid_assists: formData.direPlayers[1].assists,
+        dire_off_name: formData.direPlayers[2].player,
+        dire_off_hero: formData.direPlayers[2].hero,
+        dire_off_kills: formData.direPlayers[2].kills,
+        dire_off_deaths: formData.direPlayers[2].deaths,
+        dire_off_assists: formData.direPlayers[2].assists,
+        dire_soft_name: formData.direPlayers[3].player,
+        dire_soft_hero: formData.direPlayers[3].hero,
+        dire_soft_kills: formData.direPlayers[3].kills,
+        dire_soft_deaths: formData.direPlayers[3].deaths,
+        dire_soft_assists: formData.direPlayers[3].assists,
+        dire_hard_name: formData.direPlayers[4].player,
+        dire_hard_hero: formData.direPlayers[4].hero,
+        dire_hard_kills: formData.direPlayers[4].kills,
+        dire_hard_deaths: formData.direPlayers[4].deaths,
+        dire_hard_assists: formData.direPlayers[4].assists,
+        rad_ban1: formData.radiantBans[0],
+        rad_ban2: formData.radiantBans[1],
+        rad_ban3: formData.radiantBans[2],
+        rad_ban4: formData.radiantBans[3],
+        rad_ban5: formData.radiantBans[4],
+        rad_ban6: formData.radiantBans[5],
+        rad_ban7: formData.radiantBans[6],
+        dire_ban1: formData.direBans[0],
+        dire_ban2: formData.direBans[1],
+        dire_ban3: formData.direBans[2],
+        dire_ban4: formData.direBans[3],
+        dire_ban5: formData.direBans[4],
+        dire_ban6: formData.direBans[5],
+        dire_ban7: formData.direBans[6],
       };
 
-      console.log('Row data:', row);
-      // TODO: Send the row data to your backend API
+      // TODO -- maybe make this URL a config or a secret
+      fetch(
+        'https://script.google.com/macros/s/AKfycbxebPLujmwxQmB-mb-ybZN2c1yMhhv4fHygWTcbqps-V3QOsMj8d8DrXbCslFFGawIBwA/exec',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.status === 'success') {
+            console.log('Success:', result.message);
+            // TODO: Handle success, e.g., show success message to the user
+          } else {
+            console.error('Error:', result.message);
+            // TODO: Handle error, e.g., show error message to the user
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          // TODO: Handle network or other errors
+        });
     }
   };
 
