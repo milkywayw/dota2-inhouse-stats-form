@@ -3,6 +3,7 @@ import { Trophy, Crown } from 'lucide-react';
 import Tooltip from '../ui/tooltip';
 import HeroSelector from '../ui/hero-selector';
 import PlayerSelector from '../ui/player-selector';
+import KDAInput from '../ui/player-score-input';
 import { heroes } from '../../data/heroes';
 import { players } from '../../data/players';
 
@@ -190,61 +191,22 @@ const MatchForm = () => {
                     error={touched && errors[`${team}Hero${index}`]}
                   />
                 </div>
-                <div className="flex items-center">
-                  <input
-                    key={`${team}-${role}-kills`}
-                    type="number"
-                    min="0"
-                    placeholder="K"
-                    value={formData[`${team}Players`][index].kills}
-                    onChange={(e) => {
-                      const newPlayers = [...formData[`${team}Players`]];
-                      newPlayers[index] = { ...newPlayers[index], kills: e.target.value };
-                      setFormData({ ...formData, [`${team}Players`]: newPlayers });
-                    }}
-                    className={`w-16 px-2 py-1 rounded border transition-colors ${
-                      touched && !formData[`${team}Players`][index].kills
-                        ? 'border-theme-error'
-                        : 'border-theme-border'
-                    }`}
-                  />
-                  <span className="mx-1 text-theme-text-muted">/</span>
-                  <input
-                    key={`${team}-${role}-deaths`}
-                    type="number"
-                    min="0"
-                    placeholder="D"
-                    value={formData[`${team}Players`][index].deaths}
-                    onChange={(e) => {
-                      const newPlayers = [...formData[`${team}Players`]];
-                      newPlayers[index] = { ...newPlayers[index], deaths: e.target.value };
-                      setFormData({ ...formData, [`${team}Players`]: newPlayers });
-                    }}
-                    className={`w-16 px-2 py-1 rounded border transition-colors ${
-                      touched && !formData[`${team}Players`][index].deaths
-                        ? 'border-theme-error'
-                        : 'border-theme-border'
-                    }`}
-                  />
-                  <span className="mx-1 text-theme-text-muted">/</span>
-                  <input
-                    key={`${team}-${role}-assists`}
-                    type="number"
-                    min="0"
-                    placeholder="A"
-                    value={formData[`${team}Players`][index].assists}
-                    onChange={(e) => {
-                      const newPlayers = [...formData[`${team}Players`]];
-                      newPlayers[index] = { ...newPlayers[index], assists: e.target.value };
-                      setFormData({ ...formData, [`${team}Players`]: newPlayers });
-                    }}
-                    className={`w-16 px-2 py-1 rounded border transition-colors ${
-                      touched && !formData[`${team}Players`][index].assists
-                        ? 'border-theme-error'
-                        : 'border-theme-border'
-                    }`}
-                  />
-                </div>
+                <KDAInput
+                  kills={formData[`${team}Players`][index].kills}
+                  deaths={formData[`${team}Players`][index].deaths}
+                  assists={formData[`${team}Players`][index].assists}
+                  onChange={(newKDA) => {
+                    const newPlayers = [...formData[`${team}Players`]];
+                    newPlayers[index] = { ...newPlayers[index], ...newKDA };
+                    setFormData({ ...formData, [`${team}Players`]: newPlayers });
+                  }}
+                  touched={touched}
+                  errors={{
+                    kills: errors[`${team}Kills${index}`],
+                    deaths: errors[`${team}Deaths${index}`],
+                    assists: errors[`${team}Assists${index}`],
+                  }}
+                />
                 <Tooltip content="Mark this player as the team drafter!">
                   <button
                     type="button"
