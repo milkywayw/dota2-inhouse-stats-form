@@ -3,7 +3,7 @@ import { Trophy, Crown } from 'lucide-react';
 import Tooltip from '../ui/tooltip';
 import HeroSelector from '../ui/selectors/HeroSelector/index';
 import PlayerSelector from '../ui/selectors/PlayerSelector/index';
-import KDAInput from '../ui/player-score-input';
+import KDAInput from '../ui/inputs/KdaInput/index';
 import { heroes } from '../../data/heroes';
 import { players } from '../../data/players';
 
