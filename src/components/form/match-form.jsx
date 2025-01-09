@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Trophy, Crown } from 'lucide-react';
 import Tooltip from '../ui/tooltip';
-import HeroSelector from '../ui/hero-selector';
-import PlayerSelector from '../ui/PlayerSelector/index';
+import HeroSelector from '../ui/selectors/HeroSelector/index';
+import PlayerSelector from '../ui/selectors/PlayerSelector/index';
 import KDAInput from '../ui/player-score-input';
 import { heroes } from '../../data/heroes';
 import { players } from '../../data/players';
