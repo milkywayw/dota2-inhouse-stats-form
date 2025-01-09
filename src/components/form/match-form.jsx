@@ -71,8 +71,52 @@ const MatchForm = () => {
     setTouched(true);
 
     if (validate()) {
-      console.log('Form data:', formData);
-      // TODO: Submit to your backend
+      const row = {
+        date: formData.date,
+        notes: formData.notes,
+        winner: formData.winner,
+        ...formData.radiantPlayers.reduce((acc, player, index) => {
+          const prefix = `p${index + 1}_`;
+          return {
+            ...acc,
+            [`${prefix}name`]: player.player,
+            [`${prefix}hero`]: player.hero,
+            [`${prefix}position`]: ROLES[index],
+            [`${prefix}team`]: 'radiant',
+            [`${prefix}kills`]: player.kills,
+            [`${prefix}deaths`]: player.deaths,
+            [`${prefix}assists`]: player.assists,
+          };
+        }, {}),
+        ...formData.direPlayers.reduce((acc, player, index) => {
+          const prefix = `p${index + 6}_`;
+          return {
+            ...acc,
+            [`${prefix}name`]: player.player,
+            [`${prefix}hero`]: player.hero,
+            [`${prefix}position`]: ROLES[index],
+            [`${prefix}team`]: 'dire',
+            [`${prefix}kills`]: player.kills,
+            [`${prefix}deaths`]: player.deaths,
+            [`${prefix}assists`]: player.assists,
+          };
+        }, {}),
+        ...formData.radiantBans.reduce((acc, ban, index) => {
+          return {
+            ...acc,
+            [`radiant_ban${index + 1}`]: ban,
+          };
+        }, {}),
+        ...formData.direBans.reduce((acc, ban, index) => {
+          return {
+            ...acc,
+            [`dire_ban${index + 1}`]: ban,
+          };
+        }, {}),
+      };
+
+      console.log('Row data:', row);
+      // TODO: Send the row data to your backend API
     }
   };
 
