@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Trophy, Crown } from 'lucide-react';
+import { Trophy, Crown, Loader2 } from 'lucide-react';
 import Tooltip from '../ui/tooltip';
 import HeroSelector from '../ui/selectors/HeroSelector/index';
 import PlayerSelector from '../ui/selectors/PlayerSelector/index';
 import KDAInput from '../ui/inputs/KdaInput/index';
 import { heroes } from '../../data/heroes';
 import { players } from '../../data/players';
+import { MatchSubmissionDialog } from '../ui/dialog/MatchSubmissionDialog/index';
 
 const ROLES = ['Carry', 'Mid', 'Off', 'Soft', 'Hard'];
 const KDA_LABELS = { kills: 'K', deaths: 'D', assists: 'A' };
@@ -19,12 +20,56 @@ const MatchForm = () => {
     direCaptain: null,
     radiantBans: Array(7).fill(null),
     direBans: Array(7).fill(null),
-    radiantPlayers: Array(5).fill({ player: null, hero: null, kills: '', deaths: '', assists: '' }),
-    direPlayers: Array(5).fill({ player: null, hero: null, kills: '', deaths: '', assists: '' }),
+    radiantPlayers: Array(5).fill({
+      player: null,
+      hero: null,
+      kills: '',
+      deaths: '',
+      assists: '',
+    }),
+    direPlayers: Array(5).fill({
+      player: null,
+      hero: null,
+      kills: '',
+      deaths: '',
+      assists: '',
+    }),
   });
 
   const [touched, setTouched] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+
+  const resetForm = () => {
+    setFormData({
+      date: '',
+      notes: '',
+      winner: null,
+      radiantCaptain: null,
+      direCaptain: null,
+      radiantBans: Array(7).fill(null),
+      direBans: Array(7).fill(null),
+      radiantPlayers: Array(5).fill({
+        player: null,
+        hero: null,
+        kills: '',
+        deaths: '',
+        assists: '',
+      }),
+      direPlayers: Array(5).fill({
+        player: null,
+        hero: null,
+        kills: '',
+        deaths: '',
+        assists: '',
+      }),
+    });
+    setTouched(false);
+    setErrors({});
+    setSubmitStatus(null);
+  };
 
   const validate = () => {
     const newErrors = {};
@@ -66,7 +111,7 @@ const MatchForm = () => {
     return players.filter((player) => !selectedPlayers.includes(player));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched(true);
 
@@ -141,198 +186,254 @@ const MatchForm = () => {
         dire_ban7: formData.direBans[6],
       };
 
-      // TODO -- maybe make this URL a config or a secret
-      fetch(
-        'https://script.google.com/macros/s/AKfycbxebPLujmwxQmB-mb-ybZN2c1yMhhv4fHygWTcbqps-V3QOsMj8d8DrXbCslFFGawIBwA/exec',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8',
-          },
-          body: JSON.stringify(data),
-        }
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          if (result.status === 'success') {
-            console.log('Success:', result.message);
-            // TODO: Handle success, e.g., show success message to the user
-          } else {
-            console.error('Error:', result.message);
-            // TODO: Handle error, e.g., show error message to the user
+      setIsSubmitting(true);
+
+      try {
+        const response = await fetch(
+          'https://script.google.com/macros/s/AKfycbxebPLujmwxQmB-mb-ybZN2c1yMhhv4fHygWTcbqps-V3QOsMj8d8DrXbCslFFGawIBwA/exec',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8',
+            },
+            body: JSON.stringify(data),
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          // TODO: Handle network or other errors
-        });
+        );
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          setSubmitStatus('success');
+        } else {
+          setSubmitStatus('error');
+          console.error('Submission failed:', result.message);
+        }
+      } catch (error) {
+        console.error('Submission error:', error);
+        setSubmitStatus('error');
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
-
   return (
-    <div className="max-w-7xl mx-auto p-4 transition-colors">
-      {/* Header Section */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-4">Match Entry</h1>
-        <div className="flex gap-4">
-          <div>
-            <label className="block text-sm mb-1">Date of Inhouse</label>
-            <input
-              type="date"
-              value={formData.date}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              className={`px-3 py-2 rounded border ${errors.date && touched ? 'border-theme-error' : 'border-theme-border'}`}
-            />
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm mb-1">Notes</label>
-            <input
-              type="text"
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              placeholder="Optional notes about the match"
-              className="w-full px-3 py-2 rounded border border-theme-border"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Bans Section */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Bans</h2>
-        <div className="space-y-4">
-          {['radiant', 'dire'].map((team) => (
-            <div key={`${team}-bans`}>
-              <h3
-                className={`text-sm font-medium mb-2 ${team === 'radiant' ? 'text-theme-radiant' : 'text-theme-dire'}`}
-              >
-                {team.charAt(0).toUpperCase() + team.slice(1)} Bans
-              </h3>
-              <div className="grid grid-cols-7 gap-2">
-                {formData[`${team}Bans`].map((ban, index) => (
-                  <HeroSelector
-                    key={`${team}-ban-${index}`}
-                    selectedHero={ban}
-                    onChange={(hero) => {
-                      const newBans = [...formData[`${team}Bans`]];
-                      newBans[index] = hero;
-                      setFormData({ ...formData, [`${team}Bans`]: newBans });
-                    }}
-                    availableHeroes={getAvailableHeroes(ban)}
-                    error={touched && !ban}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Teams Section */}
-      {['radiant', 'dire'].map((team) => (
-        <div key={team} className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <Tooltip content={`Mark ${team} team as winner!`}>
-              <button
-                type="button"
-                onClick={() =>
-                  setFormData({ ...formData, winner: formData.winner === team ? null : team })
-                }
-                className={`p-2 rounded-full transition-colors border-2 ${
-                  formData.winner === team
-                    ? 'bg-theme-winner text-theme-winner-text border-theme-winner'
-                    : touched && !formData.winner
-                      ? 'border-theme-error'
-                      : 'border-theme-border-muted hover:border-theme-winner'
+    <>
+      <div className="max-w-7xl mx-auto p-4 transition-colors">
+        {/* Header Section */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold mb-4">Match Entry</h1>
+          <div className="flex gap-4">
+            <div>
+              <label className="block text-sm mb-1">Date of Inhouse</label>
+              <input
+                type="date"
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                className={`px-3 py-2 rounded border ${
+                  errors.date && touched ? 'border-theme-error' : 'border-theme-border'
                 }`}
-              >
-                <Trophy className="w-5 h-5" />
-              </button>
-            </Tooltip>
-            <h2
-              className={`text-xl font-semibold ${team === 'radiant' ? 'text-theme-radiant' : 'text-theme-dire'}`}
-            >
-              {team.charAt(0).toUpperCase() + team.slice(1)}
-            </h2>
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm mb-1">Notes</label>
+              <input
+                type="text"
+                value={formData.notes}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                placeholder="Optional notes about the match"
+                className="w-full px-3 py-2 rounded border border-theme-border"
+              />
+            </div>
           </div>
+        </div>
 
-          <div className="space-y-3">
-            {ROLES.map((role, index) => (
-              <div key={`${team}-${role}`} className="flex items-center gap-4">
-                <div className="w-16 text-sm font-medium">{role}</div>
-                <div className="w-64">
-                  <PlayerSelector
-                    selectedPlayer={formData[`${team}Players`][index].player}
-                    onChange={(player) => {
-                      const newPlayers = [...formData[`${team}Players`]];
-                      newPlayers[index] = { ...newPlayers[index], player };
-                      setFormData({ ...formData, [`${team}Players`]: newPlayers });
-                    }}
-                    availablePlayers={getAvailablePlayers(formData[`${team}Players`][index].player)}
-                    error={touched && errors[`${team}Player${index}`]}
-                  />
+        {/* Bans Section */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">Bans</h2>
+          <div className="space-y-4">
+            {['radiant', 'dire'].map((team) => (
+              <div key={`${team}-bans`}>
+                <h3
+                  className={`text-sm font-medium mb-2 ${
+                    team === 'radiant' ? 'text-theme-radiant' : 'text-theme-dire'
+                  }`}
+                >
+                  {team.charAt(0).toUpperCase() + team.slice(1)} Bans
+                </h3>
+                <div className="grid grid-cols-7 gap-2">
+                  {formData[`${team}Bans`].map((ban, index) => (
+                    <HeroSelector
+                      key={`${team}-ban-${index}`}
+                      selectedHero={ban}
+                      onChange={(hero) => {
+                        const newBans = [...formData[`${team}Bans`]];
+                        newBans[index] = hero;
+                        setFormData({ ...formData, [`${team}Bans`]: newBans });
+                      }}
+                      availableHeroes={getAvailableHeroes(ban)}
+                      error={touched && !ban}
+                    />
+                  ))}
                 </div>
-                <div className="w-64">
-                  <HeroSelector
-                    selectedHero={formData[`${team}Players`][index].hero}
-                    onChange={(hero) => {
-                      const newPlayers = [...formData[`${team}Players`]];
-                      newPlayers[index] = { ...newPlayers[index], hero };
-                      setFormData({ ...formData, [`${team}Players`]: newPlayers });
-                    }}
-                    availableHeroes={getAvailableHeroes(formData[`${team}Players`][index].hero)}
-                    error={touched && errors[`${team}Hero${index}`]}
-                  />
-                </div>
-                <KDAInput
-                  kills={formData[`${team}Players`][index].kills}
-                  deaths={formData[`${team}Players`][index].deaths}
-                  assists={formData[`${team}Players`][index].assists}
-                  onChange={(newKDA) => {
-                    const newPlayers = [...formData[`${team}Players`]];
-                    newPlayers[index] = { ...newPlayers[index], ...newKDA };
-                    setFormData({ ...formData, [`${team}Players`]: newPlayers });
-                  }}
-                  touched={touched}
-                  errors={{
-                    kills: errors[`${team}Kills${index}`],
-                    deaths: errors[`${team}Deaths${index}`],
-                    assists: errors[`${team}Assists${index}`],
-                  }}
-                />
-                <Tooltip content="Mark this player as the team drafter!">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (formData[`${team}Captain`] === index) {
-                        setFormData({ ...formData, [`${team}Captain`]: null });
-                      } else {
-                        setFormData({ ...formData, [`${team}Captain`]: index });
-                      }
-                    }}
-                    className={`p-2 rounded-full transition-colors border-2 ${
-                      formData[`${team}Captain`] === index
-                        ? 'bg-theme-winner text-theme-winner-text border-theme-winner'
-                        : 'border-theme-border-muted hover:border-theme-winner'
-                    }`}
-                  >
-                    <Crown className="w-5 h-5" />
-                  </button>
-                </Tooltip>
               </div>
             ))}
           </div>
         </div>
-      ))}
 
-      <button
-        type="submit"
-        onClick={handleSubmit}
-        className="w-full py-3 rounded bg-theme-primary hover:bg-theme-primary-dark text-theme-primary-text font-medium"
-      >
-        Submit Match
-      </button>
-    </div>
+        {/* Teams Section */}
+        {['radiant', 'dire'].map((team) => (
+          <div key={team} className="mb-8">
+            <div className="flex items-center gap-4 mb-4">
+              <Tooltip content={`Mark ${team} team as winner!`}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      winner: formData.winner === team ? null : team,
+                    })
+                  }
+                  className={`p-2 rounded-full transition-colors border-2 ${
+                    formData.winner === team
+                      ? 'bg-theme-winner text-theme-winner-text border-theme-winner'
+                      : touched && !formData.winner
+                        ? 'border-theme-error'
+                        : 'border-theme-border-muted hover:border-theme-winner'
+                  }`}
+                >
+                  <Trophy className="w-5 h-5" />
+                </button>
+              </Tooltip>
+              <h2
+                className={`text-xl font-semibold ${
+                  team === 'radiant' ? 'text-theme-radiant' : 'text-theme-dire'
+                }`}
+              >
+                {team.charAt(0).toUpperCase() + team.slice(1)}
+              </h2>
+            </div>
+
+            <div className="space-y-3">
+              {ROLES.map((role, index) => (
+                <div key={`${team}-${role}`} className="flex items-center gap-4">
+                  <div className="w-16 text-sm font-medium">{role}</div>
+                  <div className="w-64">
+                    <PlayerSelector
+                      selectedPlayer={formData[`${team}Players`][index].player}
+                      onChange={(player) => {
+                        const newPlayers = [...formData[`${team}Players`]];
+                        newPlayers[index] = { ...newPlayers[index], player };
+                        setFormData({
+                          ...formData,
+                          [`${team}Players`]: newPlayers,
+                        });
+                      }}
+                      availablePlayers={getAvailablePlayers(
+                        formData[`${team}Players`][index].player
+                      )}
+                      error={touched && errors[`${team}Player${index}`]}
+                    />
+                  </div>
+                  <div className="w-64">
+                    <HeroSelector
+                      selectedHero={formData[`${team}Players`][index].hero}
+                      onChange={(hero) => {
+                        const newPlayers = [...formData[`${team}Players`]];
+                        newPlayers[index] = { ...newPlayers[index], hero };
+                        setFormData({
+                          ...formData,
+                          [`${team}Players`]: newPlayers,
+                        });
+                      }}
+                      availableHeroes={getAvailableHeroes(formData[`${team}Players`][index].hero)}
+                      error={touched && errors[`${team}Hero${index}`]}
+                    />
+                  </div>
+                  <KDAInput
+                    kills={formData[`${team}Players`][index].kills}
+                    deaths={formData[`${team}Players`][index].deaths}
+                    assists={formData[`${team}Players`][index].assists}
+                    onChange={(newKDA) => {
+                      const newPlayers = [...formData[`${team}Players`]];
+                      newPlayers[index] = { ...newPlayers[index], ...newKDA };
+                      setFormData({
+                        ...formData,
+                        [`${team}Players`]: newPlayers,
+                      });
+                    }}
+                    touched={touched}
+                    errors={{
+                      kills: errors[`${team}Kills${index}`],
+                      deaths: errors[`${team}Deaths${index}`],
+                      assists: errors[`${team}Assists${index}`],
+                    }}
+                  />
+                  <Tooltip content="Mark this player as the team drafter!">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (formData[`${team}Captain`] === index) {
+                          setFormData({
+                            ...formData,
+                            [`${team}Captain`]: null,
+                          });
+                        } else {
+                          setFormData({
+                            ...formData,
+                            [`${team}Captain`]: index,
+                          });
+                        }
+                      }}
+                      className={`p-2 rounded-full transition-colors border-2 ${
+                        formData[`${team}Captain`] === index
+                          ? 'bg-theme-winner text-theme-winner-text border-theme-winner'
+                          : 'border-theme-border-muted hover:border-theme-winner'
+                      }`}
+                    >
+                      <Crown className="w-5 h-5" />
+                    </button>
+                  </Tooltip>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className={`w-full py-3 rounded font-medium theme-transition-short ${
+            isSubmitting
+              ? 'bg-theme-surface-secondary text-theme-text-muted cursor-not-allowed'
+              : 'bg-theme-primary hover:bg-theme-primary-dark text-theme-primary-text'
+          }`}
+        >
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Submitting...
+            </span>
+          ) : (
+            'Submit Match'
+          )}
+        </button>
+      </div>
+
+      <MatchSubmissionDialog
+        isOpen={isSubmitting || submitStatus !== null}
+        isSubmitting={isSubmitting}
+        submitStatus={submitStatus}
+        onClose={() => {
+          if (!isSubmitting) {
+            setSubmitStatus(null);
+            resetForm();
+          }
+        }}
+        onReset={resetForm}
+      />
+    </>
   );
 };
 
