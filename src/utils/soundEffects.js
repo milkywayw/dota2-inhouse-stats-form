@@ -5,11 +5,13 @@ const meepMerp = new Audio(`${base}sounds/meep_merp.mp3`);
 const duelDrums = new Audio(`${base}sounds/duel_drum.mpeg`);
 const victoryHorn = new Audio(`${base}sounds/horn.mpeg`);
 const victoryCheer = new Audio(`${base}sounds/cheer.mpeg`);
+const blink = new Audio(`${base}sounds/blink.mpeg`);
 
 // Set volumes
 duelDrums.volume = 0.2;
 victoryHorn.volume = 0.3;
 victoryCheer.volume = 0.3;
+blink.volume = 0.7;
 
 // Configure duel drums to loop
 duelDrums.loop = true;
@@ -50,5 +52,12 @@ export const playVictorySounds = () => {
   // Play both sounds
   Promise.all([victoryHorn.play(), victoryCheer.play()]).catch((error) => {
     console.warn('Could not play victory sounds:', error);
+  });
+};
+
+export const playBlink = () => {
+  blink.currentTime = 0;
+  blink.play().catch((error) => {
+    console.warn('Could not play blink sound:', error);
   });
 };
