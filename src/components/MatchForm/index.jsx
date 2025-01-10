@@ -4,6 +4,12 @@ import { TEAMS } from '../../formConfig';
 import { transformFormDataForSubmission } from '../../utils/transformFormData';
 import { Loader2 } from 'lucide-react';
 import { submitMatchToStatsServer } from '../../services/matchApi';
+import {
+  playMeepMerp,
+  startDuelDrums,
+  stopDuelDrums,
+  playVictorySounds,
+} from '../../utils/soundEffects';
 
 import HeaderSection from './HeaderSection';
 import BansSection from './BansSection';
@@ -32,19 +38,26 @@ const MatchForm = () => {
     e.preventDefault();
     setTouched(true);
 
-    if (validate()) {
-      setIsSubmitting(true);
+    if (!validate()) {
+      playMeepMerp();
+      return;
+    }
 
-      try {
-        const transformedData = transformFormDataForSubmission(formData);
-        await submitMatchToStatsServer(transformedData);
-        setSubmitStatus('success');
-      } catch (error) {
-        console.error('Submission error:', error);
-        setSubmitStatus('error');
-      } finally {
-        setIsSubmitting(false);
-      }
+    setIsSubmitting(true);
+    startDuelDrums();
+
+    try {
+      const transformedData = transformFormDataForSubmission(formData);
+      await submitMatchToStatsServer(transformedData);
+      setSubmitStatus('success');
+      playVictorySounds(); // Play both victory sounds simultaneously!
+    } catch (error) {
+      console.error('Submission error:', error);
+      setSubmitStatus('error');
+      stopDuelDrums();
+      playMeepMerp();
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
