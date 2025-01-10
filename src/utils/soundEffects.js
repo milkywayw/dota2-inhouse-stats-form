@@ -6,6 +6,11 @@ const duelDrums = new Audio(`${base}sounds/duel_drum.mpeg`);
 const victoryHorn = new Audio(`${base}sounds/horn.mpeg`);
 const victoryCheer = new Audio(`${base}sounds/cheer.mpeg`);
 
+// Set volumes
+duelDrums.volume = 0.2;
+victoryHorn.volume = 0.3;
+victoryCheer.volume = 0.3;
+
 // Configure duel drums to loop
 duelDrums.loop = true;
 
