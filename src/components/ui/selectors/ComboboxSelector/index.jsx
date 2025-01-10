@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Combobox } from '@headlessui/react';
 import { ChevronDown } from 'lucide-react';
 import { useComboboxSearch } from '../../../../hooks/useComboboxSearch';
@@ -10,10 +10,17 @@ const ComboboxSelector = ({
   placeholder,
   disabled = false,
   error = false,
-  renderSelectedItem, // Function to render the selected item display
-  renderOption, // Function to render each option in the dropdown
+  renderSelectedItem,
+  renderOption,
 }) => {
   const { query, setQuery, filteredItems } = useComboboxSearch(availableItems);
+
+  // Reset query when selectedItem changes to null (form reset)
+  useEffect(() => {
+    if (selectedItem === null) {
+      setQuery('');
+    }
+  }, [selectedItem, setQuery]);
 
   return (
     <Combobox value={selectedItem} onChange={onChange} disabled={disabled}>
@@ -28,7 +35,7 @@ const ComboboxSelector = ({
             <Combobox.Input
               className="w-full px-2 py-1 text-sm border-none focus:ring-0 combobox-input text-theme-text placeholder-theme-text-muted"
               onChange={(event) => setQuery(event.target.value)}
-              displayValue={(item) => item}
+              displayValue={(item) => item || ''}
               placeholder={placeholder}
             />
           </div>
