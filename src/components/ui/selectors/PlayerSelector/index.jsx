@@ -9,6 +9,7 @@ const PlayerSelector = ({ selectedPlayer, onChange, availablePlayers, ...props }
       renderSelectedItem={() => null}
       renderOption={(player) => <span>{player}</span>}
       placeholder="Select player..."
+      allowAddNew={true}
       {...props}
     />
   );
