@@ -1,4 +1,4 @@
-export const getHeroImagePath = (heroName, size = 'small') => {
+export const getHeroImagePath = (heroName) => {
   if (!heroName) return '';
 
   const filename = heroName.replace(/\s+/g, '_').toLowerCase();

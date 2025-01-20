@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export const useComboboxSearch = (items) => {
   const [query, setQuery] = useState('');
