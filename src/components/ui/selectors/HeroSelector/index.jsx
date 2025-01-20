@@ -3,14 +3,15 @@ import { getHeroImagePath } from '../../../../utils/hero-utils';
 
 const HeroSelector = ({ selectedHero, onChange, availableHeroes, ...props }) => {
   const renderHeroImage = (hero) => (
-    <img src={getHeroImagePath(hero)} alt={hero} className="w-8 h-4.5 object-cover ml-1" />
+    <img src={getHeroImagePath(hero, 'small')} alt={hero} className="w-6 h-3.5 object-cover" />
   );
 
+  // For dropdown options, show both image and name
   const renderOption = (hero) => (
-    <div className="flex items-center gap-2">
-      <img src={getHeroImagePath(hero)} alt={hero} className="w-6 h-3.5 object-cover" />
-      <span>{hero}</span>
-    </div>
+    <>
+      {renderHeroImage(hero)}
+      <span className="text-sm">{hero}</span>
+    </>
   );
 
   return (
