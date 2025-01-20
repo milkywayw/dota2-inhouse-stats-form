@@ -1,4 +1,3 @@
-import React from 'react';
 import ComboboxSelector from '../ComboboxSelector';
 
 const PlayerSelector = ({ selectedPlayer, onChange, availablePlayers, ...props }) => {

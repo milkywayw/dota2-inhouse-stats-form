@@ -1,4 +1,3 @@
-import React from 'react';
 import MatchForm from './components/MatchForm/index';
 import './themes/color-schemes.css';
 import './styles/utils.css';

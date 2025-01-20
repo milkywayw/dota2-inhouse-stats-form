@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Combobox } from '@headlessui/react';
 import { ChevronDown } from 'lucide-react';
 import { useComboboxSearch } from '../../../../hooks/useComboboxSearch';

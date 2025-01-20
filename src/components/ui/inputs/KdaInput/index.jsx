@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 const KDAInput = ({ kills, deaths, assists, onChange, touched, errors = {} }) => {
   const deathsRef = useRef(null);

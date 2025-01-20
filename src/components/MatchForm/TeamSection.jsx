@@ -1,4 +1,3 @@
-import React from 'react';
 import { Trophy } from 'lucide-react';
 import Tooltip from '../ui/tooltip';
 import PlayerRow from './PlayerSection';

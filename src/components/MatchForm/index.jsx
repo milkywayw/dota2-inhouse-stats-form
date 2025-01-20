@@ -1,8 +1,6 @@
-import React from 'react';
 import { useMatchForm } from '../../hooks/useMatchForm';
 import { TEAMS } from '../../formConfig';
 import { transformFormDataForSubmission } from '../../utils/transformFormData';
-import { Loader2 } from 'lucide-react';
 import { submitMatchToStatsServer } from '../../services/matchApi';
 import {
   playMeepMerp,
