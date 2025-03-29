@@ -41,6 +41,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
       
+      # version2 recently deprecated
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
